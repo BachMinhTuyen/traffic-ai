@@ -4,6 +4,7 @@ from ultralytics import YOLO
 from app.core.config import (
 	AI_CONFIDENCE,
 	AI_DEVICE,
+	DETECTION_CLASSES,
 	MODEL_PATH,
 )
 
@@ -26,6 +27,7 @@ class TrafficDetector:
 			source=frame,
 			device=self.device,
 			conf=AI_CONFIDENCE,
+			classes=DETECTION_CLASSES,
 			verbose=False,
 		)
 

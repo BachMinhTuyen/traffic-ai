@@ -21,3 +21,21 @@ if not MODEL_PATH.is_absolute():
 VIDEO_OUTPUT_DIR = ROOT_DIR / os.getenv(
 	"VIDEO_OUTPUT_DIR", "outputs"
 )
+
+VIDEO_SOURCE = Path(
+	os.getenv("VIDEO_SOURCE", "videos/traffic.mp4")
+)
+if not VIDEO_SOURCE.is_absolute():
+	VIDEO_SOURCE = ROOT_DIR / VIDEO_SOURCE
+
+VIDEO_OUTPUT_DIR = Path(
+	os.getenv("VIDEO_OUTPUT_DIR", "outputs")
+)
+if not VIDEO_OUTPUT_DIR.is_absolute():
+	VIDEO_OUTPUT_DIR = ROOT_DIR / VIDEO_OUTPUT_DIR
+
+VIDEO_OUTPUT_PATH = VIDEO_OUTPUT_DIR / "traffic_detected.mp4"
+
+# COCO classes:
+# 0 = person, 2 = car, 3 = motorcycle, 5 = bus, 7 = truck
+DETECTION_CLASSES = [0, 2, 3, 5, 7]
