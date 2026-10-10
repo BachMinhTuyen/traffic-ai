@@ -518,6 +518,137 @@ GPU:          NVIDIA ...
 
 ---
 
+# Download YOLO Model
+
+Traffic AI uses pretrained YOLO models for object detection. Model files should be stored in the project's `models/` directory instead of the Python virtual environment.
+
+## Recommended Model
+
+| Model        | Description                                              |
+| ------------ | -------------------------------------------------------- |
+| `yolo26n.pt` | Nano model, suitable for initial development and testing |
+
+The pretrained model is provided by Ultralytics:
+
+* [YOLO26 Models](https://huggingface.co/Ultralytics/YOLO26)
+* [Download yolo26n.pt](https://huggingface.co/Ultralytics/YOLO26/resolve/main/yolo26n.pt)
+
+## 1. Create the Models Directory
+
+Run the following commands from the project root.
+
+**Ubuntu:**
+
+```bash
+mkdir -p models
+```
+
+**Windows PowerShell:**
+
+```powershell
+New-Item -ItemType Directory -Force -Path models
+```
+
+## 2. Download the Model
+
+**Ubuntu:**
+
+Make sure `curl` is installed, then run:
+
+```bash
+curl -L "https://huggingface.co/Ultralytics/YOLO26/resolve/main/yolo26n.pt" \
+  -o models/yolo26n.pt
+```
+
+**Windows PowerShell:**
+
+```powershell
+Invoke-WebRequest `
+  -Uri "https://huggingface.co/Ultralytics/YOLO26/resolve/main/yolo26n.pt" `
+  -OutFile "models/yolo26n.pt"
+```
+
+## 3. Verify the Download
+
+**Ubuntu:**
+
+```bash
+ls -lh models/yolo26n.pt
+```
+
+**Windows PowerShell:**
+
+```powershell
+Get-Item models/yolo26n.pt
+```
+
+The file should exist at:
+
+```text
+traffic-ai/
+├── app/
+├── models/
+│   └── yolo26n.pt
+├── requirements/
+├── videos/
+├── .venv/
+└── README.md
+```
+
+## 4. Configure the Model Path
+
+Add the following settings to `.env`:
+
+```dotenv
+YOLO_MODEL=models/yolo26n.pt
+AI_DEVICE=0
+AI_CONFIDENCE=0.5
+```
+
+Use `AI_DEVICE=0` for the first NVIDIA GPU or `AI_DEVICE=cpu` to run inference on the CPU.
+
+Make sure the application resolves relative model paths from the project root.
+
+## 5. Test YOLO Inference
+
+After installing the project dependencies and activating `.venv`, run:
+
+```bash
+python - <<'PY'
+import torch
+from ultralytics import YOLO
+
+model = YOLO("models/yolo26n.pt")
+
+print("CUDA available:", torch.cuda.is_available())
+
+if torch.cuda.is_available():
+    print("GPU:", torch.cuda.get_device_name(0))
+
+results = model.predict(
+    source="https://ultralytics.com/images/bus.jpg",
+    device=0 if torch.cuda.is_available() else "cpu",
+    save=True,
+)
+
+print("YOLO inference completed successfully.")
+print("Results saved to:", results[0].save_dir)
+PY
+```
+
+This test requires an internet connection to download the sample image. The model itself is loaded from the local `models/` directory.
+
+## Notes
+
+* Download the model only once unless you need to replace or update it.
+* Do not store model weights inside `.venv/`.
+* Large model files should generally not be committed to Git.
+* The `models/` directory can be retained in the repository while model weights remain excluded through `.gitignore`.
+* `yolo26n.pt` is a pretrained model; vehicle counting, tracking, traffic density estimation, and traffic signal control must be implemented separately.
+* Review the model's licensing terms before using it in a commercial or proprietary deployment.
+
+---
+
 # Test YOLO
 
 Run:
