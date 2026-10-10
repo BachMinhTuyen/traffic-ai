@@ -57,6 +57,8 @@ htmlcov/
 # ============================================================
 
 # YOLO / PyTorch / ONNX models
+models/*
+!models/.gitkeep
 models/*.pt
 models/*.pth
 models/*.onnx
@@ -67,8 +69,10 @@ models/*.weights
 # Videos / Images / AI outputs
 # ============================================================
 
-videos/
-outputs/
+videos/*
+!videos/.gitkeep
+outputs/*
+!outputs/.gitkeep
 runs/
 
 # Uploaded / processed media
